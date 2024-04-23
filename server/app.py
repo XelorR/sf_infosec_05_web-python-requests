@@ -43,7 +43,7 @@ class MyHandler(BaseHTTPRequestHandler):
 
 
 def run(server_class=HTTPServer, handler_class=MyHandler):
-    server_address = ("192.168.1.10", 3000)
+    server_address = ("127.0.0.1", 3000)
     httpd = server_class(server_address, handler_class)
     httpd.serve_forever()
 

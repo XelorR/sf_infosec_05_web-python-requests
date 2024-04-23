@@ -107,8 +107,9 @@ def main():
         with open("response.html", "w") as f:
             f.write(response.text)
     elif args.task == "server":
-        pass
-
+        from server import app
+        print("Server is running.\nPress Control-C to stop.\n")
+        app.run()
 
 if __name__ == "__main__":
     main()
