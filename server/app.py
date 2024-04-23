@@ -3,6 +3,14 @@ import json
 import requests
 import socket
 
+"""
+sendhttp example:
+curl -X POST -H "Content-Type: application/json" -d '{"Header": "User-Agent", "Header-value": "Mozilla/5.0", "Target": "http://example.com"}' http://localhost:3000/sendhttp
+
+scan example:
+curl -X POST -H "Content-Type: application/json" -d '{"Header": "User-Agent", "Header-value": "Mozilla/5.0", "Target": "http://example.com"}' http://localhost:3000/sendhttp
+"""
+
 
 # API Handler
 class MyHandler(BaseHTTPRequestHandler):
