@@ -86,7 +86,7 @@ def main():
                 for row in resp
                 if "packets transmitted" in row
                 or "отправлено =" in row
-                or "sent =" in row
+                or "Sent =" in row
             ][0]
             print(
                 f"[#] Result of scanning: {ip} [#]\n{result}",
