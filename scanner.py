@@ -58,7 +58,7 @@ def sent_http_request(target: str, method: str, headers=None, payload=None):
 def main():
     parser = argparse.ArgumentParser(description="Network scanner")
     parser.add_argument(
-        "task", choices=["scan", "sendhttp"], help="Network scan or send HTTP request"
+        "task", choices=["scan", "sendhttp", "server"], help="Network scan or send HTTP request"
     )
     parser.add_argument("-i", "--ip", type=str, help="IP address")
     parser.add_argument("-n", "--num_of_hosts", type=int, help="Number of hosts")
@@ -106,6 +106,8 @@ def main():
             f.write(header)
         with open("response.html", "w") as f:
             f.write(response.text)
+    elif args.task == "server":
+        pass
 
 
 if __name__ == "__main__":
