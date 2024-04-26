@@ -20,7 +20,7 @@ python3 scanner.py sendhttp -t https://google.com -m GET -hd Accept-Language:ru
 
 То же самое из докера:
 ```bash
-docker run --rm -it -v .:/workspace/log scanner sendhttp -t https://google.com -m GET -hd Accept-Language:ru
+docker run --rm -it scanner sendhttp -t https://google.com -m GET -hd Accept-Language:ru
 ```
 
 - `scanner.py` — название файла с кодом утилиты;
@@ -60,7 +60,7 @@ docker build -f scanner .
 
 Запуск сервера ИЗ докера:
 ```bash
-docker run --rm -it -p 3000:3000 scanner -v .:/workspace/log scanner server
+docker run --rm -it -p 127.0.0.1:3000:3000 scanner server
 ```
 
 - Адрес докер-контейнера: 192.168.1.10
