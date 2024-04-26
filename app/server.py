@@ -50,11 +50,15 @@ class MyHandler(BaseHTTPRequestHandler):
             self.wfile.write(bytes(header_extracted, "utf-8"))
             self.wfile.write(bytes((str(response.text)), "utf-8"))
 
-        # def do_GET(self):
+    def do_GET(self):
         if self.path == "/scan":
             content_length = int(self.headers["Content-Length"])
             get_data = self.rfile.read(content_length)
             data = json.loads(get_data)
+
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.end_headers()
 
             target = data["target"]
             count = data["count"]
@@ -68,13 +72,8 @@ class MyHandler(BaseHTTPRequestHandler):
                     or "Sent =" in row
                 ][0]
                 self.wfile.write(
-                    bytes(f"[#] Result of scanning: {ip} [#]\n{result}\n\n", "utf-8")
+                    bytes(f"\n[#] Result of scanning: {ip} [#]\n{result}\n\n", "utf-8")
                 )
-                self.wfile.write(bytes(ip, "utf-8"))
-
-            self.send_response(200)
-            self.send_header("Content-type", "application/json")
-            self.end_headers()
 
 
 def run(server_class=HTTPServer, handler_class=MyHandler):
