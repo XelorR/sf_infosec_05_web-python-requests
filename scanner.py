@@ -14,51 +14,22 @@ python3 scanner.py sendhttp -t https://google.com -m GET -hd Accept-Language:ru
   -hd — аргумент, который указывается для задания заголовков.
 """
 
-import os
 import json
 import argparse
-import requests
 from platform import system
+from app.lib import *
 
 ip = "10.0.0.1"
 num_of_host = 254
 
 
-def do_ping_sweep(ip, num_of_host):
-    os_family = system().lower()
-    os_related_switches = {
-        "linux": "c",
-        "darwin": "c",
-        "windows": "n",
-    }
-    ip_parts = ip.split(".")
-    network_ip = ip_parts[0] + "." + ip_parts[1] + "." + ip_parts[2] + "."
-    scanned_ip = network_ip + str(int(ip_parts[3]) + num_of_host)
-    response = os.popen(f"ping -{os_related_switches[os_family]} 1 {scanned_ip}")
-    res = response.readlines()
-    return scanned_ip, res
-
-
-def sent_http_request(target: str, method: str, headers=None, payload=None):
-    headers_dict = dict()
-
-    if headers:
-        for header in headers:
-            header_name = header.split(":")[0]
-            header_value = header.split(":")[1:]
-            headers_dict[header_name] = ":".join(header_value)
-
-    if method.upper() in ["GET", "DELETE"]:
-        response = requests.get(target, headers=headers_dict)
-    else:
-        response = requests.post(target, headers=headers_dict, data=payload)
-    return response
-
-
 def main():
+    # part one, parsing arguments
     parser = argparse.ArgumentParser(description="Network scanner")
     parser.add_argument(
-        "task", choices=["scan", "sendhttp", "server"], help="Network scan or send HTTP request"
+        "task",
+        choices=["scan", "sendhttp", "server"],
+        help="Network scan or send HTTP request",
     )
     parser.add_argument("-i", "--ip", type=str, help="IP address")
     parser.add_argument("-n", "--num_of_hosts", type=int, help="Number of hosts")
@@ -78,6 +49,8 @@ def main():
     )
 
     args = parser.parse_args()
+    
+    # ping sweep
     if args.task == "scan":
         for host_num in range(args.num_of_hosts):
             ip, resp = do_ping_sweep(args.ip, host_num)
@@ -92,6 +65,8 @@ def main():
                 f"[#] Result of scanning: {ip} [#]\n{result}",
                 end="\n\n",
             )
+
+    # sending http request
     elif args.task == "sendhttp":
         response = sent_http_request(args.target, args.method, headers=args.headers)
         header = json.dumps(dict(response.headers), indent=4, sort_keys=True)
@@ -106,10 +81,14 @@ def main():
             f.write(header)
         with open("response.html", "w") as f:
             f.write(response.text)
+
+    # running server
     elif args.task == "server":
-        from server import app
+        from app import server
+
         print("Server is running.\nPress Control-C to stop.\n")
-        app.run()
+        server.run()
+
 
 if __name__ == "__main__":
     main()
