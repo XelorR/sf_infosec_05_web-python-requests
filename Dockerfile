@@ -12,6 +12,5 @@ ADD scanner.py .
 ADD ./app/__init__.py /workspace/app/
 ADD ./app/lib.py /workspace/app/
 ADD ./app/server.py /workspace/app/
-CMD sed -i 's/127.0.0.1/0.0.0.0/' app/server.py
 
 ENTRYPOINT ["python", "scanner.py"]

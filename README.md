@@ -62,6 +62,11 @@ docker build -f scanner .
 ```bash
 docker run --rm -it -p 127.0.0.1:3000:3000 scanner server
 ```
+или
+```bash
+docker run --rm -d --name scanner -p 127.0.0.1:3000:3000 scanner server
+# но так не столь удобно смотреть как сервер реагирует на реквесты
+```
 
 - Адрес докер-контейнера: 192.168.1.10
 - Порт, на котором работает API: 3000
