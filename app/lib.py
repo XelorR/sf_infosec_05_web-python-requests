@@ -6,7 +6,7 @@ import requests
 from platform import system
 
 
-def do_ping_sweep(ip, num_of_host, verbose=True):
+def do_ping_sweep(ip: str, num_of_host: str, verbose=True):
     os_family = system().lower()
     os_related_switches = {
         "linux": "c",
@@ -22,9 +22,7 @@ def do_ping_sweep(ip, num_of_host, verbose=True):
         result = [
             row
             for row in res
-            if "packets transmitted" in row
-            or "отправлено =" in row
-            or "Sent =" in row
+            if "packets transmitted" in row or "отправлено =" in row or "Sent =" in row
         ][0]
         print(
             f"[#] Result of scanning: {scanned_ip} [#]\n{result}",
@@ -71,6 +69,6 @@ def sent_http_request(
             f.write(header)
         with open("response.html", "w") as f:
             f.write(response.text)
-    
+
     # returning all
     return response

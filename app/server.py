@@ -11,11 +11,13 @@ sendhttp example:
 Пользователь может отправить POST-запрос на 192.168.1.10:3000/sendhttp со следующим телом запроса:
 
 {"Header": "Content-type", "Header-value": "text", "Target":"www.google.com", "Method": "GET"}
+curl -X POST -H '{"Header": "Content-type", "Header-value": "text", "Target":"www.google.com", "Method": "GET"}' http://localhost:3000/sendhttp
 
 scan example:
 Пользователь может отправить GET-запрос на 192.168.1.10:3000/scan со следующим телом запроса:
 
 {"target":"192.168.1.0", "count": "20"}
+curl -X GET -H '{"target":"192.168.1.0", "count": "20"}' http://localhost:3000/sendhttp
 """
 
 
@@ -23,37 +25,19 @@ scan example:
 class MyHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         if self.path == "/sendhttp":
-            content_length = int(self.headers["Content-Length"])
-            post_data = self.rfile.read(content_length)
-            data = json.loads(post_data)
-
-            headers = {data["Header"]: data["Header-value"]}
-            response = requests.get(data["Target"], headers=headers)
-
-            self.send_response(200)
-            self.send_header("Content-type", "text/html")
-            self.end_headers()
-            self.wfile.write(response.text.encode("utf-8"))
+            target = self.headers["Target"]
+            method = self.headers["Method"]
+            header = self.headers["Header"]
+            header_value = self.headers["Header-value"]
+            headers = f"{header}:{header_value}"
+            response = sent_http_request(target, method, headers=headers)
 
     def do_GET(self):
         if self.path == "/scan":
-            content_length = int(self.headers["Content-Length"])
-            get_data = self.rfile.read(content_length)
-            data = json.loads(get_data)
-
-            result = []
-            for i in range(1, int(data["count"]) + 1):
-                ip = data["target"] + "." + str(i)
-                try:
-                    socket.gethostbyaddr(ip)
-                    result.append(ip + " is active")
-                except socket.herror:
-                    result.append(ip + " is inactive")
-
-            self.send_response(200)
-            self.send_header("Content-type", "application/json")
-            self.end_headers()
-            self.wfile.write(json.dumps(result).encode("utf-8"))
+            target = self.headers["target"]
+            count = self.headers["count"]
+            for host_num in range(count):
+                ip, resp = do_ping_sweep(target, host_num)
 
 
 def run(server_class=HTTPServer, handler_class=MyHandler):
