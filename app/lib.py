@@ -19,16 +19,21 @@ def do_ping_sweep(ip: str, num_of_host: str, verbose=True):
     response = os.popen(f"ping -{os_related_switches[os_family]} 1 {scanned_ip}")
     res = response.readlines()
     if verbose:
-        result = [
-            row
-            for row in res
-            if "packets transmitted" in row or "отправлено =" in row or "Sent =" in row
-        ][0]
-        print(
-            f"[#] Result of scanning: {scanned_ip} [#]\n{result}",
-            end="\n\n",
-        )
+        print_ping_results(scanned_ip, res)
     return scanned_ip, res
+
+
+def print_ping_results(ip, res):
+    result = [
+        row
+        for row in res
+        if "packets transmitted" in row or "отправлено =" in row or "Sent =" in row
+    ][0]
+    print(
+        f"[#] Result of scanning: {ip} [#]\n{result}",
+        end="\n\n",
+    )
+    return result
 
 
 def sent_http_request(

@@ -11,13 +11,15 @@ sendhttp example:
 Пользователь может отправить POST-запрос на 192.168.1.10:3000/sendhttp со следующим телом запроса:
 
 {"Header": "Content-type", "Header-value": "text", "Target":"www.google.com", "Method": "GET"}
-curl -X POST -H '{"Header": "Content-type", "Header-value": "text", "Target":"www.google.com", "Method": "GET"}' http://localhost:3000/sendhttp
+
+curl -X POST -H "Content-Type: application/json" -d '{"Header": "Content-type", "Header-value": "text", "Target":"www.google.com", "Method": "GET"}' http://localhost:3000/sendhttp
 
 scan example:
 Пользователь может отправить GET-запрос на 192.168.1.10:3000/scan со следующим телом запроса:
 
 {"target":"192.168.1.0", "count": "20"}
-curl -X GET -H '{"target":"192.168.1.0", "count": "20"}' http://localhost:3000/sendhttp
+
+curl -X GET -H "Content-Type: application/json" -d '{"target":"192.168.1.0", "count": "20"}' http://localhost:3000/scan
 """
 
 
@@ -25,19 +27,44 @@ curl -X GET -H '{"target":"192.168.1.0", "count": "20"}' http://localhost:3000/s
 class MyHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         if self.path == "/sendhttp":
-            target = self.headers["Target"]
-            method = self.headers["Method"]
-            header = self.headers["Header"]
-            header_value = self.headers["Header-value"]
-            headers = f"{header}:{header_value}"
+            content_length = int(self.headers['Content-Length'])
+            post_data = self.rfile.read(content_length)
+            data = json.loads(post_data)
+            
+            target = data["Target"]
+            method = data["Method"]
+            header = data["Header"]
+            header_value = data["Header-value"]
+            headers = {header: header_value}
             response = sent_http_request(target, method, headers=headers)
+
+        self.send_response(200)
+        self.send_header('Content-type', 'application/json')
+        self.end_headers()
+
+        header_extracted = json.dumps(dict(response.headers), indent=4, sort_keys=True)
+
+        self.wfile.write(bytes((str(response.status_code)), "utf-8"))
+        self.wfile.write(bytes(header_extracted, "utf-8"))
+        self.wfile.write(bytes((str(response.text)), "utf-8"))
 
     def do_GET(self):
         if self.path == "/scan":
-            target = self.headers["target"]
-            count = self.headers["count"]
-            for host_num in range(count):
+            content_length = int(self.headers['Content-Length'])
+            get_data = self.rfile.read(content_length)
+            data = json.loads(get_data)
+
+            target = data["target"]
+            count = data["count"]
+            for host_num in range(int(count)):
                 ip, resp = do_ping_sweep(target, host_num)
+                stats = print_ping_results(ip, resp)
+                self.wfile.write(bytes(ip, "utf-8"))
+                self.wfile.write(bytes(stats, "utf-8"))
+
+        self.send_response(200)
+        self.send_header('Content-type', 'application/json')
+        self.end_headers()
 
 
 def run(server_class=HTTPServer, handler_class=MyHandler):
