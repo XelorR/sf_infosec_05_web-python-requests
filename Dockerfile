@@ -9,7 +9,8 @@ RUN pip install -r requirements.txt
 CMD mkdir -p /workspace/log /workspace/app
 WORKDIR /workspace
 ADD scanner.py .
+ADD ./app/__init__.py /workspace/app/
 ADD ./app/lib.py /workspace/app/
-ADD ./app/server.py.py /workspace/app/
+ADD ./app/server.py /workspace/app/
 
 ENTRYPOINT ["python", "scanner.py"]
