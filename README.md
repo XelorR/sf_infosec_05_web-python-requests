@@ -60,7 +60,7 @@ docker build -f scanner .
 
 Запуск сервера ИЗ докера:
 ```bash
-docker run --rm -it -name scanner -v .:/workspace/log scanner server
+docker run --rm -it -p 3000:3000 scanner -v .:/workspace/log scanner server
 ```
 
 - Адрес докер-контейнера: 192.168.1.10
