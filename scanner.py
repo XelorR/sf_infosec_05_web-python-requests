@@ -14,7 +14,6 @@ python3 scanner.py sendhttp -t https://google.com -m GET -hd Accept-Language:ru
   -hd — аргумент, который указывается для задания заголовков.
 """
 
-import json
 import argparse
 from platform import system
 from app.lib import *
@@ -54,33 +53,10 @@ def main():
     if args.task == "scan":
         for host_num in range(args.num_of_hosts):
             ip, resp = do_ping_sweep(args.ip, host_num)
-            result = [
-                row
-                for row in resp
-                if "packets transmitted" in row
-                or "отправлено =" in row
-                or "Sent =" in row
-            ][0]
-            print(
-                f"[#] Result of scanning: {ip} [#]\n{result}",
-                end="\n\n",
-            )
 
     # sending http request
     elif args.task == "sendhttp":
         response = sent_http_request(args.target, args.method, headers=args.headers)
-        header = json.dumps(dict(response.headers), indent=4, sort_keys=True)
-        print(
-            f"[#] Response status code: {response.status_code}\n"
-            f"[#] Response headers: {header}\n"
-            f"[#] Response content:\n {response.text}"
-        )
-        with open("status.txt", "w") as f:
-            f.write(str(response.status_code))
-        with open("headers.json", "w") as f:
-            f.write(header)
-        with open("response.html", "w") as f:
-            f.write(response.text)
 
     # running server
     elif args.task == "server":

@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 
 import os
+import json
 import requests
 from platform import system
 
 
-def do_ping_sweep(ip, num_of_host):
+def do_ping_sweep(ip, num_of_host, verbose=True):
     os_family = system().lower()
     os_related_switches = {
         "linux": "c",
@@ -17,10 +18,29 @@ def do_ping_sweep(ip, num_of_host):
     scanned_ip = network_ip + str(int(ip_parts[3]) + num_of_host)
     response = os.popen(f"ping -{os_related_switches[os_family]} 1 {scanned_ip}")
     res = response.readlines()
+    if verbose:
+        result = [
+            row
+            for row in res
+            if "packets transmitted" in row
+            or "отправлено =" in row
+            or "Sent =" in row
+        ][0]
+        print(
+            f"[#] Result of scanning: {scanned_ip} [#]\n{result}",
+            end="\n\n",
+        )
     return scanned_ip, res
 
 
-def sent_http_request(target: str, method: str, headers=None, payload=None):
+def sent_http_request(
+    target: str,
+    method: str,
+    headers=None,
+    payload=None,
+    verbose=True,
+    save_results=False,
+):
     headers_dict = dict()
 
     if headers:
@@ -33,4 +53,24 @@ def sent_http_request(target: str, method: str, headers=None, payload=None):
         response = requests.get(target, headers=headers_dict)
     else:
         response = requests.post(target, headers=headers_dict, data=payload)
+    header = json.dumps(dict(response.headers), indent=4, sort_keys=True)
+
+    # print out the results
+    if verbose:
+        print(
+            f"[#] Response status code: {response.status_code}\n"
+            f"[#] Response headers: {header}\n"
+            f"[#] Response content:\n {response.text}"
+        )
+
+    # saving results into files
+    if save_results:
+        with open("status.txt", "w") as f:
+            f.write(str(response.status_code))
+        with open("headers.json", "w") as f:
+            f.write(header)
+        with open("response.html", "w") as f:
+            f.write(response.text)
+    
+    # returning all
     return response
