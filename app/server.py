@@ -60,9 +60,17 @@ class MyHandler(BaseHTTPRequestHandler):
             count = data["count"]
             for host_num in range(int(count)):
                 ip, resp = do_ping_sweep(target, host_num)
-                # stats = print_ping_results(ip, resp)
+                result = [
+                    row
+                    for row in resp
+                    if "packets transmitted" in row
+                    or "отправлено =" in row
+                    or "Sent =" in row
+                ][0]
+                self.wfile.write(
+                    bytes(f"[#] Result of scanning: {ip} [#]\n{result}\n\n", "utf-8")
+                )
                 self.wfile.write(bytes(ip, "utf-8"))
-                # self.wfile.write(bytes(stats, "utf-8"))
 
             self.send_response(200)
             self.send_header("Content-type", "application/json")
