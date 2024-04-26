@@ -4,6 +4,7 @@
 - [Lib](./app/lib.py)
 - [Server](./app/server.py)
 - [Dockerfile](Dockerfile)
+- [requirements](./requirements.txt)
 
 ## Ожидаемый функционал
 

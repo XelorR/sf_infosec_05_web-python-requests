@@ -17,8 +17,7 @@ scan example:
 
 {"target":"192.168.1.0", "count": "20"}
 
-curl -X GET -H "Content-Type: application/json" -d '{"target":"192.168.1.0", "count": "20"}' http://localhost:3000/scan
-curl -X POST -H "Content-Type: application/json" -d '{"target":"10.0.0.1", "count": "3"}' http://localhost:3000/scan
+curl -X GET -H "Content-Type: application/json" -d '{"target":"10.0.0.1", "count": "3"}' http://localhost:3000/scan
 """
 
 
