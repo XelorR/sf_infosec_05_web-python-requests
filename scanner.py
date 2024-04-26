@@ -15,7 +15,6 @@ python3 scanner.py sendhttp -t https://google.com -m GET -hd Accept-Language:ru
 """
 
 import argparse
-from platform import system
 from app.lib import *
 
 ip = "10.0.0.1"
@@ -48,7 +47,7 @@ def main():
     )
 
     args = parser.parse_args()
-    
+
     # ping sweep
     if args.task == "scan":
         for host_num in range(args.num_of_hosts):
