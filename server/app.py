@@ -5,10 +5,14 @@ import socket
 
 """
 sendhttp example:
-curl -X POST -H "Content-Type: application/json" -d '{"Header": "User-Agent", "Header-value": "Mozilla/5.0", "Target": "http://example.com"}' http://localhost:3000/sendhttp
+Пользователь может отправить POST-запрос на 192.168.1.10:3000/sendhttp со следующим телом запроса:
+
+{"Header": "Content-type", "Header-value": "text", "Target":"www.google.com", "Method": "GET"}
 
 scan example:
-curl -X POST -H "Content-Type: application/json" -d '{"Header": "User-Agent", "Header-value": "Mozilla/5.0", "Target": "http://example.com"}' http://localhost:3000/sendhttp
+Пользователь может отправить GET-запрос на 192.168.1.10:3000/scan со следующим телом запроса:
+
+{"target":"192.168.1.0", "count": "20"}
 """
 
 
