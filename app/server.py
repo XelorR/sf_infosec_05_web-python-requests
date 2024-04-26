@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 import requests
@@ -19,7 +21,6 @@ scan example:
 
 # API Handler
 class MyHandler(BaseHTTPRequestHandler):
-
     def do_POST(self):
         if self.path == "/sendhttp":
             content_length = int(self.headers["Content-Length"])
