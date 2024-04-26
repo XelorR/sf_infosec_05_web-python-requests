@@ -20,6 +20,7 @@ scan example:
 {"target":"192.168.1.0", "count": "20"}
 
 curl -X GET -H "Content-Type: application/json" -d '{"target":"192.168.1.0", "count": "20"}' http://localhost:3000/scan
+curl -X POST -H "Content-Type: application/json" -d '{"target":"10.0.0.1", "count": "3"}' http://localhost:3000/scan
 """
 
 
@@ -39,17 +40,17 @@ class MyHandler(BaseHTTPRequestHandler):
             headers = {header: header_value}
             response = sent_http_request(target, method, headers=headers)
 
-        self.send_response(200)
-        self.send_header("Content-type", "application/json")
-        self.end_headers()
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.end_headers()
 
-        header_extracted = json.dumps(dict(response.headers), indent=4, sort_keys=True)
+            header_extracted = json.dumps(dict(response.headers), indent=4, sort_keys=True)
 
-        self.wfile.write(bytes((str(response.status_code)), "utf-8"))
-        self.wfile.write(bytes(header_extracted, "utf-8"))
-        self.wfile.write(bytes((str(response.text)), "utf-8"))
+            self.wfile.write(bytes((str(response.status_code)), "utf-8"))
+            self.wfile.write(bytes(header_extracted, "utf-8"))
+            self.wfile.write(bytes((str(response.text)), "utf-8"))
 
-    def do_GET(self):
+    # def do_GET(self):
         if self.path == "/scan":
             content_length = int(self.headers["Content-Length"])
             get_data = self.rfile.read(content_length)
@@ -63,9 +64,9 @@ class MyHandler(BaseHTTPRequestHandler):
                 self.wfile.write(bytes(ip, "utf-8"))
                 self.wfile.write(bytes(stats, "utf-8"))
 
-        self.send_response(200)
-        self.send_header("Content-type", "application/json")
-        self.end_headers()
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.end_headers()
 
 
 def run(server_class=HTTPServer, handler_class=MyHandler):

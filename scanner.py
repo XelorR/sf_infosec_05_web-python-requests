@@ -45,6 +45,9 @@ def main():
     parser.add_argument(
         "-hd", "--headers", type=str, nargs="+", help="HTTP headers (name:value)"
     )
+    # parser.add_argument(
+    #     "-p", "--payload", type=str, help="Payload"
+    # )
 
     args = parser.parse_args()
 
@@ -55,7 +58,7 @@ def main():
 
     # sending http request
     elif args.task == "sendhttp":
-        response = sent_http_request(args.target, args.method, headers=args.headers)
+        response = sent_http_request(args.target, args.method, headers=args.headers) #, payload=args.payload)
 
     # running server
     elif args.task == "server":
