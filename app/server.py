@@ -27,11 +27,12 @@ curl -X GET -H "Content-Type: application/json" -d '{"target":"192.168.1.0", "co
 class MyHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         if self.path == "/sendhttp":
-            content_length = int(self.headers['Content-Length'])
+            content_length = int(self.headers["Content-Length"])
             post_data = self.rfile.read(content_length)
             data = json.loads(post_data)
-            
+
             target = data["Target"]
+            target = target if target.startswith("http") else f"http://{target}"
             method = data["Method"]
             header = data["Header"]
             header_value = data["Header-value"]
@@ -39,7 +40,7 @@ class MyHandler(BaseHTTPRequestHandler):
             response = sent_http_request(target, method, headers=headers)
 
         self.send_response(200)
-        self.send_header('Content-type', 'application/json')
+        self.send_header("Content-type", "application/json")
         self.end_headers()
 
         header_extracted = json.dumps(dict(response.headers), indent=4, sort_keys=True)
@@ -50,7 +51,7 @@ class MyHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         if self.path == "/scan":
-            content_length = int(self.headers['Content-Length'])
+            content_length = int(self.headers["Content-Length"])
             get_data = self.rfile.read(content_length)
             data = json.loads(get_data)
 
@@ -63,7 +64,7 @@ class MyHandler(BaseHTTPRequestHandler):
                 self.wfile.write(bytes(stats, "utf-8"))
 
         self.send_response(200)
-        self.send_header('Content-type', 'application/json')
+        self.send_header("Content-type", "application/json")
         self.end_headers()
 
 
