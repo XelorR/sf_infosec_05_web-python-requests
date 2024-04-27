@@ -3,21 +3,29 @@
 import os
 import json
 import requests
-from platform import system
+import subprocess
 
 
-def do_ping_sweep(ip: str, num_of_host: str, verbose=True):
-    os_family = system().lower()
+def do_ping_sweep(ip: str, num_of_host: int, verbose=True):
+    os_family = os.name.lower()
     os_related_switches = {
+        "posix": "c",
         "linux": "c",
         "darwin": "c",
-        "windows": "n",
+        "nt": "n",  # Windows uses 'nt' instead of 'windows' for os.name
     }
     ip_parts = ip.split(".")
     network_ip = ip_parts[0] + "." + ip_parts[1] + "." + ip_parts[2] + "."
     scanned_ip = network_ip + str(int(ip_parts[3]) + num_of_host)
-    response = os.popen(f"ping -{os_related_switches[os_family]} 1 {scanned_ip}")
-    res = response.readlines()
+
+    # Using subprocess to run the ping command
+    response = subprocess.run(
+        ["ping", "-" + os_related_switches[os_family], "1", scanned_ip],
+        stdout=subprocess.PIPE,
+        text=True,
+    )
+
+    res = response.stdout.split("\n")
     if verbose:
         print_ping_results(scanned_ip, res)
     return scanned_ip, res
