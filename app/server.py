@@ -5,18 +5,18 @@ import json
 from app.lib import *
 
 """
-sendhttp example:
-Пользователь может отправить POST-запрос на 192.168.1.10:3000/sendhttp со следующим телом запроса:
+-----
+# sendhttp example:
+A user can send a POST request to 192.168.1.10:3000/sendhttp with the following request body:
 
-{"Header": "Content-type", "Header-value": "text", "Target":"www.google.com", "Method": "GET"}
+{"Header": "Content-type", "Header-value": "text/plain", "Target":"www.google.com", "Method": "GET"}
+curl -X POST -H "Content-Type: application/json" -d '{"Header": "Content-type", "Header-value": "text/plain", "Target":"www.google.com", "Method": "GET"}' http://localhost:3000/sendhttp
 
-curl -X POST -H "Content-Type: application/json" -d '{"Header": "Content-type", "Header-value": "text", "Target":"www.google.com", "Method": "GET"}' http://localhost:3000/sendhttp
-
-scan example:
-Пользователь может отправить GET-запрос на 192.168.1.10:3000/scan со следующим телом запроса:
+-----
+# scan example:
+A user can send a GET request to 192.168.1.10:3000/scan with the following request body:
 
 {"target":"192.168.1.0", "count": "20"}
-
 curl -X GET -H "Content-Type: application/json" -d '{"target":"10.0.0.1", "count": "3"}' http://localhost:3000/scan
 """
 
