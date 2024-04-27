@@ -1,17 +1,20 @@
-# Начинаем писать сканнер
+# Beginning to Write the Scanner
 
-- [The Main File](scanner.py)
-- [Lib](./app/lib.py)
-- [Server](./app/server.py)
-- [Dockerfile](Dockerfile)
-- [requirements](./requirements.txt)
+Here are some necessary files and their expected functionality:
 
-## Ожидаемый функционал
+- **[The Main File](./scanner.py): ./scanner.py** - This is the core utility file where most of the logic resides. Command line tool.
+- **[Lib](./app/lib.py): ./app/lib.py** - A library that contains auxiliary functions used across the application.
+- **[Server](./app/server.py): ./app/server.py** - The server file which handles HTTP requests and responses, using lib functions.
+- **[Dockerfile](Dockerfile): ./Dockerfile** - This is the configuration for building a Docker container image of the entire application. 
+- **[Requirements](./requirements.txt): ./requirements.txt** - A list of Python packages required by project.
+
+
+## Enhanced Functional Expectations
 
 **DONE**
 
-- поиск хостов с ping sweep
-- отправка http запросов
+* **Ping Sweep Host Search:** Searching for hosts that can be pinged.
+* **HTTP Requests:** Sending out HTTP requests to specified host.
 
 ### Пример http запроса:
 
