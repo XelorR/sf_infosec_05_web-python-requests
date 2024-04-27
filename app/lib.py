@@ -44,6 +44,22 @@ def sent_http_request(
     verbose=True,
     save_results=False,
 ):
+    """
+    Sends an HTTP request to the specified target using a given method.
+
+    Parameters:
+        - target (str): The URL of the server or resource.
+        - method (str): The HTTP method ('GET' or 'POST').
+        - headers (list[str]): Optional; List of header strings in "header_name:header_value" format.
+                               Defaults to None, implying no custom headers are set.
+        - payload (any): Optional; Payload data for POST requests. Can be any type supported by the `requests` library.
+                          Defaults to None, indicating a GET request without body content.
+        - verbose (bool): Whether to print detailed results or not.
+        - save_results (bool): Whether to save the response status code, headers, and content to files.
+
+    Returns:
+        A tuple of optional printed messages or saved file contents.
+    """
     headers_dict = dict()
 
     if headers:
